@@ -6,11 +6,11 @@ Building an enterprise-level web application for hospital supplies inventory man
 ## Development Phases & Todo Items
 
 ### Phase 1: Project Setup & Foundation
-- [ ] Initialize Next.js project with TypeScript
-- [ ] Set up Tailwind CSS with dark/light theme support
-- [ ] Configure ESLint and Prettier with custom rules
-- [ ] Set up Prisma ORM with SQLite database
-- [ ] Create basic project structure and folders
+- [x] Initialize Next.js project with TypeScript
+- [x] Set up Tailwind CSS with dark/light theme support
+- [x] Configure ESLint and Prettier with custom rules
+- [x] Set up Prisma ORM with SQLite database
+- [x] Create basic project structure and folders
 - [ ] Set up testing framework (Jest/React Testing Library)
 - [ ] Initialize Git repository and configure CI/CD
 

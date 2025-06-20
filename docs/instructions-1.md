@@ -1,0 +1,1 @@
+I'm looking to build a simple notion clone. an advanced note taking app with file and folder system that allows you to create many different types of notes and files. I'd like it to be built with nextjs. before we start building this out though, I want to do a little planning with you. I first want you to make a new file called project

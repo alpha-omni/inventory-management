@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Multi-tenant Company model
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users     User[]
+  sites     Site[]
+
+  @@map("companies")
+}
+
+// User model with company association
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("USER") // USER, ADMIN, SUPER_ADMIN
+  companyId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("users")
+}
+
+// Site model (hierarchical structure)
+model Site {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  companyId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  stockAreas StockArea[]
+
+  @@map("sites")
+}
+
+// Stock Area model
+model StockArea {
+  id        String   @id @default(cuid())
+  name      String
+  siteId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  site      Site       @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  inventory Inventory[]
+
+  @@map("stock_areas")
+}
+
+// Item model with classifications
+model Item {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  type         String   // MEDICATION, SUPPLY
+  
+  // Medication specific fields
+  drugId       String?
+  isHazardous  Boolean  @default(false)
+  isHighAlert  Boolean  @default(false)
+  isLASA       Boolean  @default(false) // Look-Alike-Sound-Alike
+  
+  companyId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  inventory    Inventory[]
+
+  @@map("items")
+}
+
+// Inventory tracking model
+model Inventory {
+  id              String   @id @default(cuid())
+  itemId          String
+  stockAreaId     String
+  currentQuantity Int      @default(0)
+  maxCapacity     Int?
+  reorderThreshold Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  item            Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  stockArea       StockArea @relation(fields: [stockAreaId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, stockAreaId])
+  @@map("inventory")
+}

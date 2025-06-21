@@ -7,8 +7,10 @@ const publicPaths = [
   '/api/auth/register',
   '/login',
   '/register',
-  '/',
 ]
+
+// Exact paths that don't require authentication
+const exactPublicPaths = ['/']
 
 // Paths that require authentication
 const protectedApiPaths = [
@@ -16,19 +18,27 @@ const protectedApiPaths = [
   '/api/items',
   '/api/inventory',
   '/api/stock-areas',
+  '/api/dashboard',
+  '/api/medications',
 ]
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Allow public paths
+  // Allow exact public paths
+  if (exactPublicPaths.includes(pathname)) {
+    return NextResponse.next()
+  }
+
+  // Allow public paths with startsWith
   if (publicPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.next()
   }
 
   // Check if it's a protected API path
   if (protectedApiPaths.some(path => pathname.startsWith(path))) {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
 
     if (!token) {
       return NextResponse.json(
@@ -37,7 +47,7 @@ export function middleware(request: NextRequest) {
       )
     }
 
-    const payload = verifyToken(token)
+    const payload = await verifyToken(token)
     if (!payload) {
       return NextResponse.json(
         { error: 'Invalid token' },

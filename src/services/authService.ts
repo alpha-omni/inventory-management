@@ -73,7 +73,7 @@ export class AuthService {
     })
 
     // Generate JWT token
-    const token = generateToken({
+    const token = await generateToken({
       userId: result.user.id,
       email: result.user.email,
       companyId: result.user.companyId,
@@ -110,7 +110,7 @@ export class AuthService {
     }
 
     // Generate JWT token
-    const token = generateToken({
+    const token = await generateToken({
       userId: user.id,
       email: user.email,
       companyId: user.companyId,

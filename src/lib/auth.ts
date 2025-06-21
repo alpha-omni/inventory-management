@@ -1,13 +1,15 @@
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import { SignJWT, jwtVerify } from 'jose'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key'
+const secretKey = new TextEncoder().encode(JWT_SECRET)
 
 export interface JWTPayload {
   userId: string
   email: string
   companyId: string
   role: string
+  [key: string]: unknown // Add index signature for jose compatibility
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -18,13 +20,18 @@ export async function verifyPassword(password: string, hashedPassword: string): 
   return bcrypt.compare(password, hashedPassword)
 }
 
-export function generateToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+export async function generateToken(payload: JWTPayload): Promise<string> {
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(secretKey)
 }
 
-export function verifyToken(token: string): JWTPayload | null {
+export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload
+    const { payload } = await jwtVerify(token, secretKey)
+    return payload as JWTPayload
   } catch {
     return null
   }

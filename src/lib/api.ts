@@ -197,6 +197,27 @@ class ApiClient {
   async getSafetyAlerts() {
     return this.get('/api/medications/safety-alerts')
   }
+
+  // Analytics endpoints
+  async getInventoryTrends(days: number = 30) {
+    return this.get(`/api/analytics/trends?days=${days}`)
+  }
+
+  async getUsageAnalytics() {
+    return this.get('/api/analytics/usage')
+  }
+
+  async getComplianceMetrics() {
+    return this.get('/api/analytics/compliance')
+  }
+
+  async getSitePerformance() {
+    return this.get('/api/analytics/sites')
+  }
+
+  async getPredictiveAlerts() {
+    return this.get('/api/analytics/alerts')
+  }
 }
 
 export const api = new ApiClient() 

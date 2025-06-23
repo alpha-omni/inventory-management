@@ -20,6 +20,7 @@ const protectedApiPaths = [
   '/api/stock-areas',
   '/api/dashboard',
   '/api/medications',
+  '/api/analytics',
 ]
 
 export async function middleware(request: NextRequest) {

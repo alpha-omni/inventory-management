@@ -6,16 +6,19 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "@tanstack/react-table": "^8.21.3",
+    "date-fns": "^4.1.0",
     "jose": "^6.0.11",
     "next": "15.3.4",
     "prisma": "^6.10.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -34,6 +37,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

@@ -107,7 +107,17 @@
       "WebFetch(domain:developer.mozilla.org)",
       "mcp__*",
       "Bash(vercel:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(chmod:*)",
+      "Bash(brew:*)",
+      "Bash(export:*)",
+      "Bash(createdb:*)",
+      "Bash(npm run:*)",
+      "Bash(cat:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(tsx prisma/seed-large.ts:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": []
   }

@@ -3,7 +3,7 @@ import { inventoryService } from '@/services/inventoryService'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const companyId = request.headers.get('x-company-id')
@@ -28,8 +28,9 @@ export async function POST(
       )
     }
 
+    const resolvedParams = await params
     const inventory = await inventoryService.adjustQuantity(
-      params.id, 
+      resolvedParams.id, 
       companyId, 
       parseInt(adjustment)
     )

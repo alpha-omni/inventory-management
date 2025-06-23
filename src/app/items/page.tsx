@@ -130,7 +130,7 @@ export default function ItemsPage() {
         </div>
       ),
     }),
-  ], [])
+  ], [handleDelete])
 
   const table = useReactTable({
     data: items,

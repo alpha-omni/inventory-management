@@ -172,7 +172,7 @@ describe('Performance Tests', () => {
       };
 
       // Verify thresholds are reasonable
-      Object.entries(apiResponseTimes).forEach(([operation, threshold]) => {
+      Object.entries(apiResponseTimes).forEach(([, threshold]) => {
         expect(threshold).toBeGreaterThan(0);
         expect(threshold).toBeLessThan(5000); // No operation should take more than 5 seconds
       });

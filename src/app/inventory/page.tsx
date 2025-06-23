@@ -66,7 +66,7 @@ const columnHelper = createColumnHelper<InventoryItem>()
 
 export default function InventoryPage() {
   const [inventory, setInventory] = useState<InventoryItem[]>([])
-  const [sites, setSites] = useState<Site[]>([])
+  // const [sites, setSites] = useState<Site[]>([])
   const [stockAreas, setStockAreas] = useState<StockArea[]>([])
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(true)
@@ -202,7 +202,7 @@ export default function InventoryPage() {
         </div>
       ),
     }),
-  ], [])
+  ], [handleDelete])
 
   const table = useReactTable({
     data: inventory,
@@ -233,14 +233,14 @@ export default function InventoryPage() {
   const loadData = async () => {
     try {
       setLoading(true)
-      const [inventoryData, sitesData, stockAreasData, itemsData] = await Promise.all([
+      const [inventoryData, , stockAreasData, itemsData] = await Promise.all([
         api.getInventory(),
         api.getSites(),
         api.getStockAreas(),
         api.getItems()
       ])
       setInventory(inventoryData)
-      setSites(sitesData)
+      // setSites(sitesData)
       setStockAreas(stockAreasData)
       setItems(itemsData)
     } catch (err) {
@@ -334,9 +334,9 @@ export default function InventoryPage() {
     setShowAdjustForm(false)
   }
 
-  const filteredStockAreas = stockAreas.filter(area => 
-    formData.stockAreaId ? area.id === formData.stockAreaId : true
-  )
+  // const filteredStockAreas = stockAreas.filter(area => 
+  //   formData.stockAreaId ? area.id === formData.stockAreaId : true
+  // )
 
   if (loading) {
     return (

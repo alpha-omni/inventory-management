@@ -3,7 +3,7 @@ import { inventoryService } from '@/services/inventoryService'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const companyId = request.headers.get('x-company-id')
@@ -11,7 +11,8 @@ export async function GET(
       return NextResponse.json({ error: 'Company ID required' }, { status: 400 })
     }
 
-    const inventory = await inventoryService.getInventoryById(params.id, companyId)
+    const resolvedParams = await params
+    const inventory = await inventoryService.getInventoryById(resolvedParams.id, companyId)
     return NextResponse.json(inventory)
   } catch (error) {
     console.error('Get inventory error:', error)
@@ -29,7 +30,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const companyId = request.headers.get('x-company-id')
@@ -37,6 +38,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Company ID required' }, { status: 400 })
     }
 
+    const resolvedParams = await params
     const body = await request.json()
     const { currentQuantity, maxCapacity, reorderThreshold } = body
 
@@ -47,7 +49,7 @@ export async function PUT(
       )
     }
 
-    const inventory = await inventoryService.updateInventory(params.id, companyId, {
+    const inventory = await inventoryService.updateInventory(resolvedParams.id, companyId, {
       currentQuantity: currentQuantity !== undefined ? parseInt(currentQuantity) : undefined,
       maxCapacity: maxCapacity !== undefined ? parseInt(maxCapacity) : undefined,
       reorderThreshold: reorderThreshold !== undefined ? parseInt(reorderThreshold) : undefined
@@ -70,7 +72,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const companyId = request.headers.get('x-company-id')
@@ -78,7 +80,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Company ID required' }, { status: 400 })
     }
 
-    await inventoryService.deleteInventory(params.id, companyId)
+    const resolvedParams = await params
+    await inventoryService.deleteInventory(resolvedParams.id, companyId)
     return NextResponse.json({ message: 'Inventory deleted successfully' })
   } catch (error) {
     console.error('Delete inventory error:', error)

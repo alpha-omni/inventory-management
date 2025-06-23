@@ -3,7 +3,7 @@ import { stockAreaService } from '@/services/stockAreaService'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const companyId = request.headers.get('x-company-id')
@@ -11,7 +11,8 @@ export async function GET(
       return NextResponse.json({ error: 'Company ID required' }, { status: 400 })
     }
 
-    const stockArea = await stockAreaService.getStockAreaById(params.id, companyId)
+    const resolvedParams = await params
+    const stockArea = await stockAreaService.getStockAreaById(resolvedParams.id, companyId)
     return NextResponse.json(stockArea)
   } catch (error) {
     console.error('Get stock area error:', error)
@@ -29,7 +30,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const companyId = request.headers.get('x-company-id')
@@ -37,10 +38,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Company ID required' }, { status: 400 })
     }
 
+    const resolvedParams = await params
     const body = await request.json()
     const { name } = body
 
-    const stockArea = await stockAreaService.updateStockArea(params.id, companyId, {
+    const stockArea = await stockAreaService.updateStockArea(resolvedParams.id, companyId, {
       name
     })
 
@@ -61,7 +63,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const companyId = request.headers.get('x-company-id')
@@ -69,7 +71,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Company ID required' }, { status: 400 })
     }
 
-    await stockAreaService.deleteStockArea(params.id, companyId)
+    const resolvedParams = await params
+    await stockAreaService.deleteStockArea(resolvedParams.id, companyId)
     return NextResponse.json({ message: 'Stock area deleted successfully' })
   } catch (error) {
     console.error('Delete stock area error:', error)

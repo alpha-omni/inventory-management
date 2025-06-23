@@ -347,7 +347,7 @@ export default function DashboardPage() {
               </div>
               <div className="p-6">
                 <LineChart
-                  data={trends}
+                  data={trends as unknown as Array<Record<string, string | number>>}
                   lines={trendLines}
                   xAxisDataKey="date"
                   height={350}
@@ -388,7 +388,7 @@ export default function DashboardPage() {
               </div>
               <div className="p-6">
                 <LineChart
-                  data={trends}
+                  data={trends as unknown as Array<Record<string, string | number>>}
                   lines={trendLines}
                   xAxisDataKey="date"
                   height={500}

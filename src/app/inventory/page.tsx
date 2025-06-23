@@ -202,7 +202,7 @@ export default function InventoryPage() {
         </div>
       ),
     }),
-  ], [handleDelete])
+  ], [])
 
   const table = useReactTable({
     data: inventory,
